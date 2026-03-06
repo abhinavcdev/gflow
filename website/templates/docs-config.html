@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo"><span>g</span>flow</a>
+      <ul class="nav-links">
+        <li><a href="/#features">Features</a></li>
+        <li><a href="/docs/getting-started">Docs</a></li>
+        <li><a href="/docs/commands">Commands</a></li>
+        <li><a href="https://github.com/abhinavcdev/gflow" target="_blank">GitHub</a></li>
+        <li><a href="/docs/getting-started" class="btn-nav">Get Started &rarr;</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="docs-layout">
+
+      <!-- Sidebar -->
+      <aside class="docs-sidebar">
+        <nav class="docs-nav">
+          <div class="docs-nav-label">Getting Started</div>
+          <a href="/docs/getting-started">Installation</a>
+          <a href="/docs/getting-started#token">GitHub Token</a>
+          <a href="/docs/getting-started#init">Initialize</a>
+          <a href="/docs/getting-started#first-workflow">First Workflow</a>
+          <div class="docs-nav-label">Reference</div>
+          <a href="/docs/commands">Commands</a>
+          <a href="/docs/config" class="active">Configuration</a>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="docs-content">
+        <h1>Configuration</h1>
+        <p>gflow is configured via a <code>.gflow.yml</code> file in your repository root. Commit this file to share conventions with your team.</p>
+
+        <h2 id="full-example">Full Example</h2>
+        <pre><code># .gflow.yml — team workflow configuration
+version: "0.1.0"
+
+provider:
+  name: github
+  token_env: GITHUB_TOKEN        # env var for auth token
+  owner: your-org
+  repo: your-repo
+  # host: github.example.com     # for GitHub Enterprise
+
+branching:
+  main: main
+  develop: develop
+  use_develop: false              # set true for git-flow style
+  prefixes:
+    feature: feature/
+    bugfix: bugfix/
+    hotfix: hotfix/
+    release: release/
+    support: support/
+
+pr:
+  default_base: main
+  auto_assign: true               # assign PR creator
+  draft: false                    # create as draft by default
+  merge_method: squash            # merge, squash, or rebase
+  delete_branch_on_merge: true
+  reviewers: []                   # default reviewers
+  team_reviewers: []
+  labels: []                      # default labels
+
+commit:
+  convention: conventional        # conventional, angular, or none
+  require_scope: false
+  require_ticket: false
+  ticket_pattern: '[A-Z]+-\d+'
+  types:
+    - feat
+    - fix
+    - docs
+    - refactor
+    - test
+    - chore
+    - ci
+    - perf
+
+hooks:
+  pre_pr:
+    - "go vet ./..."
+    - "go test ./..."
+  post_merge: []</code></pre>
+
+        <h2 id="provider">Provider</h2>
+        <p>Currently, gflow supports <strong>GitHub</strong> as the primary provider.</p>
+
+        <h3>Fields</h3>
+        <ul>
+          <li><code>name</code> &mdash; Provider name. Use <code>github</code>.</li>
+          <li><code>token_env</code> &mdash; Environment variable that holds your token. Default: <code>GITHUB_TOKEN</code>.</li>
+          <li><code>owner</code> &mdash; Repository owner or organization.</li>
+          <li><code>repo</code> &mdash; Repository name.</li>
+          <li><code>host</code> &mdash; Custom hostname for GitHub Enterprise. Leave empty for github.com.</li>
+        </ul>
+
+        <h2 id="branching">Branching</h2>
+        <p>Controls how branches are created and named.</p>
+
+        <h3>Fields</h3>
+        <ul>
+          <li><code>main</code> &mdash; Your main/production branch. Usually <code>main</code> or <code>master</code>.</li>
+          <li><code>develop</code> &mdash; Development branch (only used if <code>use_develop</code> is true).</li>
+          <li><code>use_develop</code> &mdash; If true, features branch from develop instead of main (git-flow style).</li>
+          <li><code>prefixes</code> &mdash; Branch name prefixes for each type (feature/, bugfix/, hotfix/, release/, support/).</li>
+        </ul>
+
+        <h2 id="pr">Pull Requests</h2>
+        <p>Controls how PRs are created and merged.</p>
+
+        <h3>Fields</h3>
+        <ul>
+          <li><code>default_base</code> &mdash; Default target branch for PRs.</li>
+          <li><code>auto_assign</code> &mdash; Automatically assign the PR creator.</li>
+          <li><code>draft</code> &mdash; Create PRs as drafts by default.</li>
+          <li><code>merge_method</code> &mdash; How to merge: <code>merge</code>, <code>squash</code>, or <code>rebase</code>.</li>
+          <li><code>delete_branch_on_merge</code> &mdash; Delete the branch after merging.</li>
+          <li><code>reviewers</code> &mdash; Default reviewers (GitHub usernames).</li>
+          <li><code>team_reviewers</code> &mdash; Default team reviewers.</li>
+          <li><code>labels</code> &mdash; Default labels to apply to PRs.</li>
+        </ul>
+
+        <h2 id="commit">Commit Conventions</h2>
+        <p>Enforces commit message standards.</p>
+
+        <h3>Fields</h3>
+        <ul>
+          <li><code>convention</code> &mdash; <code>conventional</code> (feat: msg), <code>angular</code> (feat(scope): msg), or <code>none</code>.</li>
+          <li><code>require_scope</code> &mdash; Require a scope in the commit message.</li>
+          <li><code>require_ticket</code> &mdash; Require a ticket number in the branch name.</li>
+          <li><code>ticket_pattern</code> &mdash; Regex for ticket numbers (e.g. <code>[A-Z]+-\d+</code>).</li>
+          <li><code>types</code> &mdash; Allowed commit types.</li>
+        </ul>
+
+        <h2 id="hooks">Hooks</h2>
+        <p>Run shell commands at specific lifecycle points.</p>
+
+        <h3>Fields</h3>
+        <ul>
+          <li><code>pre_pr</code> &mdash; Commands to run before creating a PR (e.g. tests, linting).</li>
+          <li><code>post_merge</code> &mdash; Commands to run after a merge (e.g. deploy, notify).</li>
+        </ul>
+
+        <pre><code>hooks:
+  pre_pr:
+    - "go vet ./..."
+    - "go test -race ./..."
+    - "golangci-lint run"
+  post_merge:
+    - "make deploy"</code></pre>
+
+        <h2 id="custom-strategies">Custom Strategies</h2>
+        <p>Define your own branch types beyond the built-in feature/bugfix/hotfix.</p>
+
+        <pre><code>strategies:
+  docs:
+    prefix: docs/
+    base: main
+    labels: ["documentation"]
+    merge_method: squash
+  ci:
+    prefix: ci/
+    base: main
+    labels: ["ci/cd"]
+    hooks:
+      pre_pr:
+        - "act -j test"</code></pre>
+
+        <p>Use custom strategies with: <code>gflow start docs update-readme</code></p>
+
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="caption">Built with Go. Open source under MIT.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/abhinavcdev/gflow" target="_blank">GitHub</a></li>
+        <li><a href="/docs/getting-started">Docs</a></li>
+        <li><a href="/docs/commands">Commands</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
