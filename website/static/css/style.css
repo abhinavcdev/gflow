@@ -16,8 +16,8 @@
   --border-light: #d0cec9;
 
   --text: #1a1a1a;
-  --text-secondary: #4a4a4a;
-  --text-muted: #7a7a7a;
+  --text-secondary: #2a2a2a;
+  --text-muted: #4a4a4a;
 
   --neon: #d4ff00;
   --neon-dark: #b8e000;
@@ -78,7 +78,7 @@ a:hover { opacity: 0.7; }
 .body-lg {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--text);
 }
 
 .body {
@@ -281,8 +281,16 @@ a:hover { opacity: 0.7; }
   letter-spacing: -0.02em;
 }
 
+.bento-card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
 .bento-card p {
-  color: var(--text-secondary);
+  color: var(--text);
   line-height: 1.6;
 }
 
@@ -413,7 +421,7 @@ a:hover { opacity: 0.7; }
 }
 
 .feature-card p {
-  color: var(--text-secondary);
+  color: var(--text);
   line-height: 1.6;
 }
 
@@ -453,7 +461,7 @@ a:hover { opacity: 0.7; }
   margin-bottom: 1.5rem;
 }
 
-.workflow-step h4 {
+.workflow-step h3 {
   font-size: 1.125rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
@@ -461,7 +469,7 @@ a:hover { opacity: 0.7; }
 }
 
 .workflow-step p {
-  color: var(--text-secondary);
+  color: var(--text);
   line-height: 1.6;
 }
 
@@ -616,14 +624,21 @@ a:hover { opacity: 0.7; }
   margin-bottom: 0.75rem;
 }
 
+.docs-content h4 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .docs-content p {
-  color: var(--text-secondary);
+  color: var(--text);
   margin-bottom: 1.25rem;
   line-height: 1.7;
 }
 
 .docs-content ul, .docs-content ol {
-  color: var(--text-secondary);
+  color: var(--text);
   padding-left: 1.5rem;
   margin-bottom: 1.25rem;
 }
@@ -703,7 +718,7 @@ a:hover { opacity: 0.7; }
 
 .cmd-card p {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text);
   margin-bottom: 0.75rem;
   line-height: 1.5;
 }
