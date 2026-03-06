@@ -116,6 +116,70 @@ func runFinish(cmd *cobra.Command, args []string) error {
 		} else {
 			ui.StopSpinner(s, fmt.Sprintf("Found PR #%d: %s", pr.Number, pr.Title))
 
+			// Check CI status before merging
+			s = ui.StartSpinner("Checking CI status...")
+			checks, checkErr := p.GetChecks(branch)
+			if checkErr != nil {
+				ui.StopSpinner(s, "Could not fetch CI status (continuing)")
+			} else if len(checks) == 0 {
+				ui.StopSpinner(s, "No CI checks configured")
+			} else {
+				passing, failing, pending := 0, 0, 0
+				for _, c := range checks {
+					switch c.Status {
+					case "success", "neutral", "skipped":
+						passing++
+					case "failure", "error", "cancelled", "timed_out", "action_required":
+						failing++
+					default:
+						pending++
+					}
+				}
+
+				if failing > 0 {
+					ui.StopSpinnerFail(s, fmt.Sprintf("%d/%d checks failed", failing, len(checks)))
+				} else if pending > 0 {
+					ui.StopSpinner(s, fmt.Sprintf("%d/%d checks passed, %d pending", passing, len(checks), pending))
+				} else {
+					ui.StopSpinner(s, fmt.Sprintf("%d/%d checks passed", passing, len(checks)))
+				}
+
+				// Show individual checks
+				for _, c := range checks {
+					var icon string
+					switch c.Status {
+					case "success":
+						icon = ui.SuccessStyle.Render("✓")
+					case "failure", "error", "cancelled", "timed_out", "action_required":
+						icon = ui.ErrorStyle.Render("✗")
+					case "neutral", "skipped":
+						icon = ui.MutedStyle.Render("○")
+					default:
+						icon = ui.WarningStyle.Render("◌")
+					}
+					fmt.Printf("    %s %s\n", icon, c.Name)
+				}
+
+				// Block merge if checks are failing
+				if failing > 0 && !finishForce {
+					fmt.Println()
+					ui.Error("CI checks must pass before merging")
+					ui.Info("Use --force to merge anyway")
+					return fmt.Errorf("%d CI checks failed", failing)
+				}
+
+				if pending > 0 && !finishForce {
+					fmt.Println()
+					proceed, promptErr := ui.PromptConfirm("Some checks are still pending. Merge anyway?", false)
+					if promptErr != nil || !proceed {
+						ui.Info("Wait for checks to complete, then run gflow finish again")
+						return fmt.Errorf("checks pending")
+					}
+				}
+			}
+
+			fmt.Println()
+
 			// Merge the PR
 			s = ui.StartSpinner(fmt.Sprintf("Merging PR #%d (%s)...", pr.Number, mergeMethod))
 			err = p.MergePR(pr.Number, provider.PRMergeOptions{
