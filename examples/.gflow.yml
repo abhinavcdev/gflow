@@ -1,0 +1,118 @@
+# gflow configuration — https://github.com/abhinavcdev/gflow
+# This is an example config with custom strategies.
+# Copy this to your project root and customize it.
+
+version: "0.1.0"
+
+provider:
+  name: github
+  token_env: GITHUB_TOKEN
+  owner: your-org
+  repo: your-repo
+
+branching:
+  main: main
+  develop: develop
+  use_develop: false
+  prefixes:
+    feature: feature/
+    bugfix: bugfix/
+    hotfix: hotfix/
+    release: release/
+    support: support/
+
+pr:
+  default_base: main
+  auto_assign: true
+  draft: false
+  merge_method: squash
+  delete_branch_on_merge: true
+  title_format: "{{.Type}}: {{.Description}}"
+  reviewers:
+    - alice
+    - bob
+  team_reviewers:
+    - backend-team
+  labels:
+    - needs-review
+
+commit:
+  convention: conventional
+  require_scope: false
+  require_ticket: false
+  ticket_pattern: '[A-Z]+-\d+'
+  types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - perf
+    - test
+    - build
+    - ci
+    - chore
+    - revert
+
+# Custom strategies extend the built-in types (feature, bugfix, hotfix, release)
+strategies:
+  experiment:
+    description: "Experimental feature — isolated sandbox"
+    base_branch: develop
+    prefix: "exp/"
+    merge_method: squash
+    labels:
+      - experimental
+    reviewers:
+      - tech-lead
+    hooks:
+      pre_create:
+        - "echo 'Creating experiment branch...'"
+      post_create:
+        - "echo 'Experiment branch ready — go wild!'"
+
+  spike:
+    description: "Technical spike / proof of concept"
+    base_branch: main
+    prefix: "spike/"
+    merge_method: squash
+    labels:
+      - spike
+      - research
+
+  docs:
+    description: "Documentation updates"
+    base_branch: main
+    prefix: "docs/"
+    merge_method: squash
+    labels:
+      - documentation
+    reviewers:
+      - docs-team
+
+  infra:
+    description: "Infrastructure / DevOps changes"
+    base_branch: main
+    prefix: "infra/"
+    merge_method: merge
+    labels:
+      - infrastructure
+      - ops
+    hooks:
+      pre_merge:
+        - "make validate-infra"
+
+  deps:
+    description: "Dependency updates"
+    base_branch: main
+    prefix: "deps/"
+    merge_method: squash
+    labels:
+      - dependencies
+
+hooks:
+  pre_pr:
+    - "make lint"
+    - "make test"
+  post_merge:
+    - "echo 'Merged successfully!'"

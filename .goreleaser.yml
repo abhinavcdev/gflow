@@ -1,0 +1,64 @@
+version: 2
+
+project_name: gflow
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/abhinavcdev/gflow/internal/config.Version={{.Version}}
+    main: .
+    binary: gflow
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+  groups:
+    - title: "✨ Features"
+      regexp: "^feat"
+    - title: "🐛 Bug Fixes"
+      regexp: "^fix"
+    - title: "📦 Other"
+      order: 999
+
+brews:
+  - repository:
+      owner: abhinavcdev
+      name: homebrew-tap
+    homepage: "https://github.com/abhinavcdev/gflow"
+    description: "Opinionated git workflow CLI — replaces git-flow, gh, and hub"
+    license: "MIT"
+    install: |
+      bin.install "gflow"
+    test: |
+      system "#{bin}/gflow", "version"
