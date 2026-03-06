@@ -1,0 +1,72 @@
+# gflow configuration — https://github.com/abhinavcdev/gflow
+# Generated for the gflow project itself (dogfooding!)
+
+version: "0.1.0"
+
+provider:
+  name: github
+  token_env: GITHUB_TOKEN
+  owner: abhinavcdev
+  repo: gflow
+
+branching:
+  main: main
+  develop: develop
+  use_develop: false
+  prefixes:
+    feature: feature/
+    bugfix: bugfix/
+    hotfix: hotfix/
+    release: release/
+    support: support/
+
+pr:
+  default_base: main
+  auto_assign: true
+  draft: false
+  merge_method: squash
+  delete_branch_on_merge: true
+  title_format: "{{.Type}}: {{.Description}}"
+  reviewers: []
+  team_reviewers: []
+  labels: []
+
+commit:
+  convention: conventional
+  require_scope: false
+  require_ticket: false
+  ticket_pattern: '[A-Z]+-\d+'
+  types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - perf
+    - test
+    - build
+    - ci
+    - chore
+    - revert
+
+strategies:
+  docs:
+    description: "Documentation changes"
+    base_branch: main
+    prefix: "docs/"
+    merge_method: squash
+    labels:
+      - documentation
+
+  ci:
+    description: "CI/CD changes"
+    base_branch: main
+    prefix: "ci/"
+    merge_method: squash
+    labels:
+      - ci
+
+hooks:
+  pre_pr:
+    - "go vet ./..."
+    - "go test ./..."
