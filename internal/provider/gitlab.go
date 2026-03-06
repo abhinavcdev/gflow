@@ -309,6 +309,11 @@ func (gl *GitLab) CreateRelease(opts ReleaseCreateOptions) (*Release, error) {
 	}, nil
 }
 
+// GetChecks returns CI check statuses for a branch (not yet implemented for GitLab)
+func (gl *GitLab) GetChecks(branch string) ([]CheckStatus, error) {
+	return nil, nil
+}
+
 func (gl *GitLab) GetUser() (string, error) {
 	var user struct {
 		Username string `json:"username"`

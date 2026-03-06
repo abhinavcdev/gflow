@@ -400,6 +400,71 @@ func (g *GitHub) ReopenPR(number int) error {
 	return g.do("PATCH", path, payload, nil)
 }
 
+// GetChecks returns CI check statuses for a branch's latest commit
+func (g *GitHub) GetChecks(branch string) ([]CheckStatus, error) {
+	// Use the check-runs API (GitHub Actions / Apps)
+	var result struct {
+		CheckRuns []struct {
+			Name       string `json:"name"`
+			Status     string `json:"status"`
+			Conclusion string `json:"conclusion"`
+			HTMLURL    string `json:"html_url"`
+		} `json:"check_runs"`
+	}
+
+	path := fmt.Sprintf("/repos/%s/%s/commits/%s/check-runs", g.owner, g.repo, branch)
+	if err := g.do("GET", path, nil, &result); err != nil {
+		return nil, err
+	}
+
+	var checks []CheckStatus
+	for _, cr := range result.CheckRuns {
+		status := cr.Conclusion
+		if cr.Status != "completed" {
+			status = cr.Status // in_progress, queued, pending
+		}
+		checks = append(checks, CheckStatus{
+			Name:       cr.Name,
+			Status:     status,
+			Conclusion: cr.Conclusion,
+			URL:        cr.HTMLURL,
+		})
+	}
+
+	// Also check commit status API (for external CI like Jenkins, etc.)
+	var commitStatus struct {
+		Statuses []struct {
+			Context     string `json:"context"`
+			State       string `json:"state"`
+			TargetURL   string `json:"target_url"`
+			Description string `json:"description"`
+		} `json:"statuses"`
+	}
+
+	statusPath := fmt.Sprintf("/repos/%s/%s/commits/%s/status", g.owner, g.repo, branch)
+	if err := g.do("GET", statusPath, nil, &commitStatus); err == nil {
+		for _, s := range commitStatus.Statuses {
+			// Avoid duplicates — check-runs and statuses can overlap
+			found := false
+			for _, c := range checks {
+				if c.Name == s.Context {
+					found = true
+					break
+				}
+			}
+			if !found {
+				checks = append(checks, CheckStatus{
+					Name:   s.Context,
+					Status: s.State,
+					URL:    s.TargetURL,
+				})
+			}
+		}
+	}
+
+	return checks, nil
+}
+
 func (g *GitHub) GetUser() (string, error) {
 	var user struct {
 		Login string `json:"login"`

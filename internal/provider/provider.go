@@ -39,6 +39,14 @@ type PRMergeOptions struct {
 	DeleteBranch bool
 }
 
+// CheckStatus represents a CI check status
+type CheckStatus struct {
+	Name       string
+	Status     string // pending, success, failure, error, neutral, cancelled, skipped
+	Conclusion string
+	URL        string
+}
+
 // Release represents a release
 type Release struct {
 	TagName string
@@ -93,6 +101,9 @@ type Provider interface {
 
 	// GetUser returns the authenticated user's login
 	GetUser() (string, error)
+
+	// GetChecks returns the CI check statuses for a PR's head commit
+	GetChecks(branch string) ([]CheckStatus, error)
 
 	// RepoURL returns the web URL of the repo
 	RepoURL() string

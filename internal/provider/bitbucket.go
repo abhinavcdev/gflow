@@ -330,5 +330,10 @@ func (bb *Bitbucket) GetUser() (string, error) {
 	return user.Username, nil
 }
 
+// GetChecks returns CI check statuses for a branch (not yet implemented for Bitbucket)
+func (bb *Bitbucket) GetChecks(branch string) ([]CheckStatus, error) {
+	return nil, nil
+}
+
 // Ensure Bitbucket implements Provider
 var _ Provider = (*Bitbucket)(nil)
