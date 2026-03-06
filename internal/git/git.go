@@ -290,7 +290,9 @@ func (g *Git) CommitCount(base string) (int, error) {
 		return 0, err
 	}
 	var count int
-	fmt.Sscanf(out, "%d", &count)
+	if _, err := fmt.Sscanf(out, "%d", &count); err != nil {
+		return 0, fmt.Errorf("failed to parse commit count: %w", err)
+	}
 	return count, nil
 }
 

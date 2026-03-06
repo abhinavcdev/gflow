@@ -44,14 +44,14 @@ func TestBitbucketCreatePR(t *testing.T) {
 			}
 
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["title"] != "feat: New feature" {
 				t.Errorf("expected title 'feat: New feature', got %v", body["title"])
 			}
 
 			w.WriteHeader(http.StatusCreated)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"id":          5,
 				"title":       "feat: New feature",
 				"description": "PR body",
@@ -99,7 +99,7 @@ func TestBitbucketCreatePR(t *testing.T) {
 func TestBitbucketGetPR(t *testing.T) {
 	bb, server := setupMockBitbucket(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/pullrequests/5") {
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"id":          5,
 				"title":       "fix: Login bug",
 				"description": "Fixes login",
@@ -136,7 +136,7 @@ func TestBitbucketGetPR(t *testing.T) {
 func TestBitbucketListPRs(t *testing.T) {
 	bb, server := setupMockBitbucket(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/pullrequests") {
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"values": []map[string]interface{}{
 					{
 						"id":    1,
@@ -185,7 +185,7 @@ func TestBitbucketMergePR(t *testing.T) {
 		if r.Method == "POST" && strings.Contains(r.URL.Path, "/merge") {
 			mergeCalled = true
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["merge_strategy"] != "squash" {
 				t.Errorf("expected squash strategy, got %v", body["merge_strategy"])
@@ -195,7 +195,7 @@ func TestBitbucketMergePR(t *testing.T) {
 			}
 
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{"state": "MERGED"})
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{"state": "MERGED"})
 			return
 		}
 		w.WriteHeader(http.StatusNotFound)
@@ -218,14 +218,14 @@ func TestBitbucketMergePRRebase(t *testing.T) {
 	bb, server := setupMockBitbucket(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" && strings.Contains(r.URL.Path, "/merge") {
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["merge_strategy"] != "fast_forward" {
 				t.Errorf("expected fast_forward for rebase, got %v", body["merge_strategy"])
 			}
 
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{"state": "MERGED"})
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{"state": "MERGED"})
 			return
 		}
 		w.WriteHeader(http.StatusNotFound)
@@ -241,7 +241,7 @@ func TestBitbucketMergePRRebase(t *testing.T) {
 func TestBitbucketGetPRForBranch(t *testing.T) {
 	bb, server := setupMockBitbucket(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/pullrequests") {
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"values": []map[string]interface{}{
 					{
 						"id":    10,
@@ -288,7 +288,7 @@ func TestBitbucketGetPRForBranch(t *testing.T) {
 func TestBitbucketAPIError(t *testing.T) {
 	bb, server := setupMockBitbucket(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
 			"error": map[string]string{"message": "Access denied"},
 		})
 	})

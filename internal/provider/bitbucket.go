@@ -76,7 +76,7 @@ func (bb *Bitbucket) do(method, path string, body interface{}, result interface{
 				Message string `json:"message"`
 			} `json:"error"`
 		}
-		json.Unmarshal(respBody, &bbErr)
+		_ = json.Unmarshal(respBody, &bbErr)
 		errMsg := bbErr.Error.Message
 		if errMsg == "" {
 			errMsg = string(respBody)

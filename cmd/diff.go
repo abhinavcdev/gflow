@@ -87,7 +87,7 @@ func runDiff(cmd *cobra.Command, args []string) error {
 			if f == "" {
 				continue
 			}
-			icon := "  "
+			var icon string
 			if strings.HasSuffix(f, "_test.go") || strings.Contains(f, "test") {
 				icon = "🧪"
 			} else if strings.HasSuffix(f, ".md") {

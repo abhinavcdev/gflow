@@ -72,11 +72,6 @@ type commitEntry struct {
 
 // Styles for the dashboard
 var (
-	dashBorder = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(ui.Primary).
-			Padding(0, 1)
-
 	dashHeader = lipgloss.NewStyle().
 			Bold(true).
 			Foreground(ui.Primary).
@@ -217,7 +212,7 @@ func runDash(cmd *cobra.Command, args []string) error {
 		behindOut, err := g.Run("rev-list", "--count", data.currentBranch+"..origin/"+data.baseBranch)
 		if err == nil {
 			var behind int
-			fmt.Sscanf(strings.TrimSpace(behindOut), "%d", &behind)
+			_, _ = fmt.Sscanf(strings.TrimSpace(behindOut), "%d", &behind)
 			data.mu.Lock()
 			data.commitsBehind = behind
 			data.mu.Unlock()
@@ -438,7 +433,7 @@ func renderDashboard(d *dashData) {
 			limit = len(d.recentCommits)
 		}
 		for _, c := range d.recentCommits[:limit] {
-			icon := " "
+			var icon string
 			cType := extractCommitType(c.subject)
 			switch cType {
 			case "feat":

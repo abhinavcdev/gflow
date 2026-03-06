@@ -86,7 +86,7 @@ func (gl *GitLab) do(method, path string, body interface{}, result interface{}) 
 			Message interface{} `json:"message"`
 			Error   string      `json:"error"`
 		}
-		json.Unmarshal(respBody, &glErr)
+		_ = json.Unmarshal(respBody, &glErr)
 		errMsg := fmt.Sprintf("%v", glErr.Message)
 		if glErr.Error != "" {
 			errMsg = glErr.Error
@@ -116,14 +116,14 @@ func (gl *GitLab) CreatePR(opts PRCreateOptions) (*PullRequest, error) {
 	}
 
 	var glMR struct {
-		IID     int    `json:"iid"`
-		Title   string `json:"title"`
-		Desc    string `json:"description"`
-		WebURL  string `json:"web_url"`
-		State   string `json:"state"`
-		Draft   bool   `json:"draft"`
-		Source  string `json:"source_branch"`
-		Target  string `json:"target_branch"`
+		IID    int    `json:"iid"`
+		Title  string `json:"title"`
+		Desc   string `json:"description"`
+		WebURL string `json:"web_url"`
+		State  string `json:"state"`
+		Draft  bool   `json:"draft"`
+		Source string `json:"source_branch"`
+		Target string `json:"target_branch"`
 	}
 
 	path := fmt.Sprintf("/projects/%s/merge_requests", gl.projectPath())
@@ -151,13 +151,13 @@ func (gl *GitLab) CreatePR(opts PRCreateOptions) (*PullRequest, error) {
 
 func (gl *GitLab) GetPR(number int) (*PullRequest, error) {
 	var glMR struct {
-		IID    int    `json:"iid"`
-		Title  string `json:"title"`
-		Desc   string `json:"description"`
-		WebURL string `json:"web_url"`
-		State  string `json:"state"`
-		Source string `json:"source_branch"`
-		Target string `json:"target_branch"`
+		IID    int      `json:"iid"`
+		Title  string   `json:"title"`
+		Desc   string   `json:"description"`
+		WebURL string   `json:"web_url"`
+		State  string   `json:"state"`
+		Source string   `json:"source_branch"`
+		Target string   `json:"target_branch"`
 		Labels []string `json:"labels"`
 	}
 

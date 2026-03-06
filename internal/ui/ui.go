@@ -196,7 +196,7 @@ type SummaryItem struct {
 func NewSpinner(msg string) *spinner.Spinner {
 	s := spinner.New(spinner.CharSets[14], 80*time.Millisecond)
 	s.Suffix = "  " + msg
-	s.Color("magenta")
+	_ = s.Color("magenta")
 	return s
 }
 
