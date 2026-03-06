@@ -26,6 +26,10 @@ Thumbs.db
 # Go
 vendor/
 
+# Environment / secrets
+.env
+.env.*
+
 # gflow config (user-specific tokens)
 # Note: .gflow.yml itself SHOULD be committed (it's team config)
 # but never put tokens directly in the file
