@@ -33,11 +33,11 @@ Examples:
 }
 
 var (
-	releaseDraft   bool
-	releasePre     bool
-	releaseNoTag   bool
-	releaseNoPush  bool
-	releaseNotes   string
+	releaseDraft  bool
+	releasePre    bool
+	releaseNoTag  bool
+	releaseNoPush bool
+	releaseNotes  string
 )
 
 func init() {
@@ -124,7 +124,7 @@ func runRelease(cmd *cobra.Command, args []string) error {
 		s := ui.StartSpinner("Pushing to remote...")
 		if err := g.Push(); err != nil {
 			// Might need upstream
-			g.PushSetUpstream()
+			_ = g.PushSetUpstream()
 		}
 		if !releaseNoTag {
 			if err := g.PushTag(tagName); err != nil {
@@ -247,9 +247,9 @@ func bumpVersion(current, bump string) string {
 	}
 
 	major, minor, patch := 0, 0, 0
-	fmt.Sscanf(parts[0], "%d", &major)
-	fmt.Sscanf(parts[1], "%d", &minor)
-	fmt.Sscanf(parts[2], "%d", &patch)
+	_, _ = fmt.Sscanf(parts[0], "%d", &major)
+	_, _ = fmt.Sscanf(parts[1], "%d", &minor)
+	_, _ = fmt.Sscanf(parts[2], "%d", &patch)
 
 	switch bump {
 	case "major":

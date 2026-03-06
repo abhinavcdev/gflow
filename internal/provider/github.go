@@ -85,7 +85,7 @@ func (g *GitHub) do(method, path string, body interface{}, result interface{}) e
 				Message string `json:"message"`
 			} `json:"errors"`
 		}
-		json.Unmarshal(respBody, &ghErr)
+		_ = json.Unmarshal(respBody, &ghErr)
 		errMsg := ghErr.Message
 		if len(ghErr.Errors) > 0 {
 			var msgs []string

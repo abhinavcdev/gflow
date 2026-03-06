@@ -90,7 +90,7 @@ func runSync(cmd *cobra.Command, args []string) error {
 	if err := g.PullRebase(); err != nil {
 		ui.StopSpinnerFail(s, fmt.Sprintf("Failed to update %s", baseBranch))
 		// Switch back
-		g.Checkout(currentBranch)
+		_ = g.Checkout(currentBranch)
 		return err
 	}
 	ui.StopSpinner(s, fmt.Sprintf("Updated %s", baseBranch))

@@ -62,29 +62,30 @@ var (
 
 // Icons
 const (
-	IconCheck    = "✓"
-	IconCross    = "✗"
-	IconArrow    = "→"
-	IconDot      = "●"
-	IconBranch   = ""
-	IconPR       = ""
-	IconRocket   = "🚀"
-	IconGear     = "⚙"
-	IconLock     = "🔒"
-	IconTag      = "🏷"
-	IconMerge    = ""
-	IconWarning  = "⚠"
-	IconInfo     = "ℹ"
-	IconStar     = "★"
+	IconCheck   = "✓"
+	IconCross   = "✗"
+	IconArrow   = "→"
+	IconDot     = "●"
+	IconBranch  = ""
+	IconPR      = ""
+	IconRocket  = "🚀"
+	IconGear    = "⚙"
+	IconLock    = "🔒"
+	IconTag     = "🏷"
+	IconMerge   = ""
+	IconWarning = "⚠"
+	IconInfo    = "ℹ"
+	IconStar    = "★"
 )
 
 // Banner prints the gflow banner
 func Banner() {
 	banner := `
-   __ _  __| | _____      __
-  / _` + "`" + ` |/ _` + "`" + ` |/ _ \ \ /\ / /
- | (_| | (_| | (_) \ V  V / 
-  \__, |\__,_|\___/ \_/\_/  
+         __ _                
+   __ _ / _| | _____      __
+  / _` + "`" + ` | |_| |/ _ \ \ /\ / /
+ | (_| |  _| | (_) \ V  V / 
+  \__, |_| |_|\___/ \_/\_/  
   |___/`
 	fmt.Println(lipgloss.NewStyle().Foreground(Primary).Bold(true).Render(banner))
 	fmt.Println(MutedStyle.Render("  opinionated git workflow CLI"))
@@ -195,7 +196,7 @@ type SummaryItem struct {
 func NewSpinner(msg string) *spinner.Spinner {
 	s := spinner.New(spinner.CharSets[14], 80*time.Millisecond)
 	s.Suffix = "  " + msg
-	s.Color("magenta")
+	_ = s.Color("magenta")
 	return s
 }
 

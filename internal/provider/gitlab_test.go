@@ -69,7 +69,7 @@ func TestGitLabCreateMR(t *testing.T) {
 			}
 
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["title"] != "feat: New feature" {
 				t.Errorf("expected title 'feat: New feature', got %v", body["title"])
@@ -82,7 +82,7 @@ func TestGitLabCreateMR(t *testing.T) {
 			}
 
 			w.WriteHeader(http.StatusCreated)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"iid":           10,
 				"title":         "feat: New feature",
 				"description":   "MR body",
@@ -123,7 +123,7 @@ func TestGitLabCreateMR(t *testing.T) {
 func TestGitLabGetMR(t *testing.T) {
 	gl, server := setupMockGitLab(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/merge_requests/10") {
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"iid":           10,
 				"title":         "fix: Bug fix",
 				"description":   "Fixes a bug",
@@ -158,7 +158,7 @@ func TestGitLabGetMR(t *testing.T) {
 func TestGitLabListMRs(t *testing.T) {
 	gl, server := setupMockGitLab(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/merge_requests") {
-			json.NewEncoder(w).Encode([]map[string]interface{}{
+			_ = json.NewEncoder(w).Encode([]map[string]interface{}{
 				{
 					"iid":           1,
 					"title":         "MR one",
@@ -203,7 +203,7 @@ func TestGitLabMergeMR(t *testing.T) {
 		if r.Method == "PUT" && strings.Contains(r.URL.Path, "/merge") {
 			mergeCalled = true
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["squash"] != true {
 				t.Errorf("expected squash=true, got %v", body["squash"])
@@ -213,7 +213,7 @@ func TestGitLabMergeMR(t *testing.T) {
 			}
 
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{"state": "merged"})
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{"state": "merged"})
 			return
 		}
 		w.WriteHeader(http.StatusNotFound)
@@ -235,7 +235,7 @@ func TestGitLabMergeMR(t *testing.T) {
 func TestGitLabGetUser(t *testing.T) {
 	gl, server := setupMockGitLab(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && r.URL.Path == "/user" {
-			json.NewEncoder(w).Encode(map[string]string{
+			_ = json.NewEncoder(w).Encode(map[string]string{
 				"username": "gluser",
 			})
 			return
@@ -256,7 +256,7 @@ func TestGitLabGetUser(t *testing.T) {
 func TestGitLabAPIError(t *testing.T) {
 	gl, server := setupMockGitLab(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
 			"error": "insufficient_scope",
 		})
 	})

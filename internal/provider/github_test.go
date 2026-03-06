@@ -62,7 +62,7 @@ func TestGitHubCreatePR(t *testing.T) {
 
 			// Verify request body
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["title"] != "feat: Add auth" {
 				t.Errorf("expected title 'feat: Add auth', got %v", body["title"])
@@ -75,7 +75,7 @@ func TestGitHubCreatePR(t *testing.T) {
 			}
 
 			w.WriteHeader(http.StatusCreated)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"number":   42,
 				"title":    "feat: Add auth",
 				"body":     "PR body",
@@ -119,7 +119,7 @@ func TestGitHubCreatePR(t *testing.T) {
 func TestGitHubGetPR(t *testing.T) {
 	gh, server := setupMockGitHub(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/pulls/42") {
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"number":   42,
 				"title":    "feat: Something",
 				"body":     "body",
@@ -159,7 +159,7 @@ func TestGitHubGetPR(t *testing.T) {
 func TestGitHubListPRs(t *testing.T) {
 	gh, server := setupMockGitHub(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/pulls") {
-			json.NewEncoder(w).Encode([]map[string]interface{}{
+			_ = json.NewEncoder(w).Encode([]map[string]interface{}{
 				{
 					"number":   1,
 					"title":    "PR one",
@@ -209,21 +209,21 @@ func TestGitHubMergePR(t *testing.T) {
 		if r.Method == "PUT" && strings.Contains(r.URL.Path, "/merge") {
 			mergeCalled = true
 			var body map[string]interface{}
-			json.NewDecoder(r.Body).Decode(&body)
+			_ = json.NewDecoder(r.Body).Decode(&body)
 
 			if body["merge_method"] != "squash" {
 				t.Errorf("expected squash merge, got %v", body["merge_method"])
 			}
 
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"merged": true,
 			})
 			return
 		}
 		// GetPR call for branch deletion
 		if r.Method == "GET" && strings.Contains(r.URL.Path, "/pulls/42") {
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"number": 42,
 				"head":   map[string]string{"ref": "feature/test"},
 				"base":   map[string]string{"ref": "main"},
@@ -254,7 +254,7 @@ func TestGitHubMergePR(t *testing.T) {
 func TestGitHubGetUser(t *testing.T) {
 	gh, server := setupMockGitHub(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && r.URL.Path == "/user" {
-			json.NewEncoder(w).Encode(map[string]string{
+			_ = json.NewEncoder(w).Encode(map[string]string{
 				"login": "testuser",
 			})
 			return
@@ -275,7 +275,7 @@ func TestGitHubGetUser(t *testing.T) {
 func TestGitHubAPIError(t *testing.T) {
 	gh, server := setupMockGitHub(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
 			"message": "Validation Failed",
 			"errors": []map[string]string{
 				{"message": "A pull request already exists"},

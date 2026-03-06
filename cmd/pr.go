@@ -97,7 +97,7 @@ Examples:
 		currentBranch, _ := g.CurrentBranch()
 
 		for _, pr := range prs {
-			icon := "  "
+			var icon string
 			if pr.Draft {
 				icon = ui.MutedStyle.Render("◌")
 			} else {
@@ -248,7 +248,7 @@ func runPR(cmd *cobra.Command, args []string) error {
 	}
 
 	// Determine base branch
-	baseBranch := cfg.PR.DefaultBase
+	var baseBranch string
 	if prBase != "" {
 		baseBranch = prBase
 	} else {
