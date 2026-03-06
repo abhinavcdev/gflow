@@ -5,10 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{.Title}}</title>
   <meta name="description" content="{{.Description}}">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="keywords" content="git workflow, git flow, github cli, git automation, pull request automation, branch management, git tool, developer tools, devops, ci cd">
+  <meta name="author" content="gflow">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://gflow.dev/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gflow.dev/">
+  <meta property="og:title" content="{{.Title}}">
+  <meta property="og:description" content="{{.Description}}">
+  <meta property="og:image" content="https://gflow.dev/og-image.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://gflow.dev/">
+  <meta name="twitter:title" content="{{.Title}}">
+  <meta name="twitter:description" content="{{.Description}}">
+  <meta name="twitter:image" content="https://gflow.dev/og-image.png">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "gflow",
+    "description": "Git workflow automation CLI. One command to branch, commit, PR, and merge.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS, Linux, Windows",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "gflow"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -26,9 +68,10 @@
   </nav>
 
   <!-- Hero -->
+  <main>
   <section class="hero container">
     <div class="hero-content">
-      <h1 class="display">
+      <h1 class="display" role="heading" aria-level="1">
         Git workflows,<br>
         minus the ton of work
       </h1>
@@ -63,24 +106,24 @@
 
       <!-- Bento card 2: Stats -->
       <div class="bento-card neon">
-        <h3>3 commands</h3>
+        <p class="bento-card-title"><strong>3 commands</strong></p>
         <p>Start, PR, Finish. That's your entire workflow.</p>
       </div>
 
       <!-- Bento card 3: Feature highlight -->
       <div class="bento-card">
-        <h3>Zero config</h3>
+        <p class="bento-card-title"><strong>Zero config</strong></p>
         <p>Works out of the box with sensible defaults.</p>
       </div>
     </div>
   </section>
 
-  <!-- Features Bento Grid -->
-  <section class="features" id="features">
+  <!-- Features -->
+  <section class="features" id="features" aria-labelledby="features-heading">
     <div class="container">
       <div class="section-head">
         <p class="section-label">FEATURES</p>
-        <h2 class="headline">Everything you need</h2>
+        <h2 class="headline" id="features-heading">Everything you need</h2>
       </div>
 
       <div class="bento-grid">
@@ -132,38 +175,38 @@
   </section>
 
   <!-- Workflow -->
-  <section class="workflow">
+  <section class="workflow" aria-labelledby="workflow-heading">
     <div class="container">
       <div class="section-head">
         <p class="section-label">WORKFLOW</p>
-        <h2 class="headline">Three commands.<br>One workflow.</h2>
+        <h2 class="headline" id="workflow-heading">Three commands.<br>One workflow.</h2>
       </div>
 
       <div class="workflow-steps">
         <div class="workflow-step">
           <div class="step-num">1</div>
-          <h4>Start a branch</h4>
+          <h3>Start a branch</h3>
           <p>Create a feature, bugfix, or hotfix branch with the right naming convention.</p>
           <code class="step-cmd">gflow start feature auth</code>
         </div>
 
         <div class="workflow-step">
           <div class="step-num">2</div>
-          <h4>Create a PR</h4>
+          <h3>Create a PR</h3>
           <p>Commit, push, and open a pull request in one command.</p>
           <code class="step-cmd">gflow pr "Add user auth"</code>
         </div>
 
         <div class="workflow-step">
           <div class="step-num">3</div>
-          <h4>Merge & clean up</h4>
+          <h3>Merge & clean up</h3>
           <p>Merge the PR, switch back to main, and delete the feature branch.</p>
           <code class="step-cmd">gflow finish</code>
         </div>
 
         <div class="workflow-step">
           <div class="step-num">4</div>
-          <h4>Monitor status</h4>
+          <h3>Monitor status</h3>
           <p>Check your branch status, CI checks, and sync state anytime.</p>
           <code class="step-cmd">gflow dash</code>
         </div>
@@ -172,10 +215,10 @@
   </section>
 
   <!-- CTA -->
-  <section class="cta">
+  <section class="cta" aria-labelledby="cta-heading">
     <div class="container">
       <div class="cta-box">
-        <h2 class="headline">Ready to ship faster?</h2>
+        <h2 class="headline" id="cta-heading">Ready to ship faster?</h2>
         <p class="body-lg">Install gflow and streamline your Git workflow today.</p>
         <div class="hero-actions">
           <a href="/docs/getting-started" class="btn-primary">Get Started →</a>
@@ -184,6 +227,7 @@
       </div>
     </div>
   </section>
+  </main>
 
   <!-- Footer -->
   <footer class="footer">
