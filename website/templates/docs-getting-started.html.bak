@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo"><span>g</span>flow</a>
+      <ul class="nav-links">
+        <li><a href="/#features">Features</a></li>
+        <li><a href="/docs/getting-started" class="active">Docs</a></li>
+        <li><a href="/docs/commands">Commands</a></li>
+        <li><a href="https://github.com/abhinavcdev/gflow" target="_blank">GitHub</a></li>
+        <li><a href="/docs/getting-started" class="btn-nav">Get Started &rarr;</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="docs-layout">
+
+      <!-- Sidebar -->
+      <aside class="docs-sidebar">
+        <nav class="docs-nav">
+          <div class="docs-nav-label">Getting Started</div>
+          <a href="/docs/getting-started" class="active">Installation</a>
+          <a href="/docs/getting-started#token">GitHub Token</a>
+          <a href="/docs/getting-started#init">Initialize</a>
+          <a href="/docs/getting-started#first-workflow">First Workflow</a>
+          <div class="docs-nav-label">Reference</div>
+          <a href="/docs/commands">Commands</a>
+          <a href="/docs/config">Configuration</a>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="docs-content">
+        <h1>Getting Started</h1>
+        <p>Get gflow installed and running in under 2 minutes.</p>
+
+        <h2 id="install">Installation</h2>
+
+        <h3>Go Install (recommended)</h3>
+        <p>If you have Go 1.22+ installed:</p>
+        <pre><code>go install github.com/abhinavcdev/gflow@latest</code></pre>
+
+        <h3>From Source</h3>
+        <pre><code>git clone https://github.com/abhinavcdev/gflow.git
+cd gflow
+make build
+sudo mv bin/gflow /usr/local/bin/</code></pre>
+
+        <h3>Verify</h3>
+        <pre><code>gflow version</code></pre>
+
+        <h2 id="token">GitHub Token Setup</h2>
+        <p>gflow needs a GitHub Personal Access Token to create PRs, manage releases, and configure branch protection.</p>
+
+        <h3>Generate a token</h3>
+        <ol>
+          <li>Go to <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a></li>
+          <li>Click <strong>"Generate new token"</strong> &rarr; <strong>"Generate new token (classic)"</strong></li>
+          <li>Name it <code>gflow</code></li>
+          <li>Select the <strong><code>repo</code></strong> scope (full control of private repositories)</li>
+          <li>Click <strong>"Generate token"</strong> and copy it</li>
+        </ol>
+
+        <h3>Set it in your shell</h3>
+        <pre><code>export GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx</code></pre>
+
+        <h3>Make it permanent</h3>
+        <pre><code># zsh (default on macOS)
+echo 'export GITHUB_TOKEN=ghp_xxxx' >> ~/.zshrc
+source ~/.zshrc
+
+# bash
+echo 'export GITHUB_TOKEN=ghp_xxxx' >> ~/.bashrc
+source ~/.bashrc</code></pre>
+
+        <p><strong>Security note:</strong> gflow reads the token from the <code>GITHUB_TOKEN</code> environment variable. It is <em>never</em> stored in <code>.gflow.yml</code> or committed to git.</p>
+
+        <h2 id="init">Initialize gflow</h2>
+        <p>Navigate to your repository and run the setup wizard:</p>
+        <pre><code>cd your-repo
+gflow init</code></pre>
+
+        <p>The wizard will:</p>
+        <ul>
+          <li>Auto-detect your GitHub repository from the git remote</li>
+          <li>Check for your GitHub token</li>
+          <li>Ask about branching conventions (prefixes, main branch)</li>
+          <li>Set PR defaults (merge method, draft mode, reviewers)</li>
+          <li>Configure commit conventions</li>
+          <li>Write a <code>.gflow.yml</code> file</li>
+        </ul>
+
+        <p><strong>Tip:</strong> Commit <code>.gflow.yml</code> to your repo so your entire team shares the same conventions.</p>
+
+        <h2 id="first-workflow">Your First Workflow</h2>
+
+        <h3>1. Start a feature branch</h3>
+        <pre><code>gflow start feature user-auth</code></pre>
+        <p>Creates <code>feature/user-auth</code> from <code>main</code>, synced with remote.</p>
+
+        <h3>2. Make your changes</h3>
+        <p>Write code as usual. Use <code>gflow commit</code> for interactive conventional commits, or commit normally.</p>
+        <pre><code>gflow commit</code></pre>
+
+        <h3>3. Open a PR</h3>
+        <pre><code>gflow pr "Add user authentication"</code></pre>
+        <p>This single command stages all changes, commits, pushes, and opens a pull request with your configured labels and settings.</p>
+
+        <h3>4. Check the dashboard</h3>
+        <pre><code>gflow dash</code></pre>
+        <p>See your branch, PR status, CI checks, and recent commits — all fetched in parallel.</p>
+
+        <h3>5. Merge and clean up</h3>
+        <pre><code>gflow finish</code></pre>
+        <p>Checks CI status, merges the PR, deletes the branch, and switches back to main.</p>
+
+        <div style="margin-top: var(--space-3xl); padding: var(--space-xl); background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+          <h3 style="margin-top: 0;">Next steps</h3>
+          <ul>
+            <li><a href="/docs/commands">Browse all commands</a></li>
+            <li><a href="/docs/config">Configure .gflow.yml</a></li>
+            <li><a href="https://github.com/abhinavcdev/gflow" target="_blank">Star on GitHub</a></li>
+          </ul>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="caption">Built with Go. Open source under MIT.</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/abhinavcdev/gflow" target="_blank">GitHub</a></li>
+        <li><a href="/docs/getting-started">Docs</a></li>
+        <li><a href="/docs/commands">Commands</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
