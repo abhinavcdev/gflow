@@ -412,6 +412,7 @@ func runPR(cmd *cobra.Command, args []string) error {
 	p, err := provider.New(cfg)
 	if err != nil {
 		ui.StopSpinnerFail(s, "Failed to connect to provider")
+		ui.Error(err.Error())
 		return err
 	}
 
@@ -428,6 +429,7 @@ func runPR(cmd *cobra.Command, args []string) error {
 	})
 	if err != nil {
 		ui.StopSpinnerFail(s, "Failed to create PR")
+		ui.Error(err.Error())
 		return fmt.Errorf("failed to create PR: %w", err)
 	}
 
