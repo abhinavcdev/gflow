@@ -61,4 +61,5 @@ func init() {
 	rootCmd.AddCommand(diffCmd)
 	rootCmd.AddCommand(reopenCmd)
 	rootCmd.AddCommand(dashCmd)
+	rootCmd.AddCommand(protectCmd)
 }
