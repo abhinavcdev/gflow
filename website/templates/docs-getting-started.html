@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{.Title}}</title>
+  <meta name="description" content="Get started with gflow in under 5 minutes. Install, configure, and run your first Git workflow automation.">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="keywords" content="gflow installation, gflow setup, github token, git workflow tutorial, gflow getting started">
+  <meta name="author" content="gflow">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://gflow.dev/docs/getting-started">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://gflow.dev/docs/getting-started">
+  <meta property="og:title" content="{{.Title}}">
+  <meta property="og:description" content="Get started with gflow in under 5 minutes. Install, configure, and run your first Git workflow automation.">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -42,7 +56,7 @@
       </aside>
 
       <!-- Content -->
-      <main class="docs-content">
+      <main class="docs-content" role="main">
         <h1>Getting Started</h1>
         <p>Get up and running with gflow in under 5 minutes.</p>
 
@@ -58,7 +72,7 @@
         <h2 id="token">GitHub Token Setup</h2>
         <p>gflow needs a GitHub personal access token to create PRs and manage branches.</p>
 
-        <h3>Generate a token</h3>
+        <h4>Generate a token</h4>
         <ol>
           <li>Go to <a href="https://github.com/settings/tokens/new">GitHub Settings → Developer settings → Personal access tokens</a></li>
           <li>Click <strong>Generate new token (classic)</strong></li>
@@ -73,7 +87,7 @@
           <li>Copy the token (you won't see it again!)</li>
         </ol>
 
-        <h3>Set the token</h3>
+        <h4>Set the token</h4>
         <p>Add the token to your shell profile (<code>~/.zshrc</code> or <code>~/.bashrc</code>):</p>
         <pre><code>export GITHUB_TOKEN="your_token_here"</code></pre>
 
@@ -97,16 +111,16 @@
         <h2 id="first-workflow">Your First Workflow</h2>
         <p>Let's create a feature branch, make a PR, and merge it.</p>
 
-        <h3>1. Start a feature branch</h3>
+        <h4>1. Start a feature branch</h4>
         <pre><code>gflow start feature user-authentication</code></pre>
         <p>This creates <code>feature/user-authentication</code> from <code>main</code> and switches to it.</p>
 
-        <h3>2. Make your changes</h3>
+        <h4>2. Make your changes</h4>
         <p>Edit files, commit as usual:</p>
         <pre><code>git add .
 git commit -m "feat: add user login endpoint"</code></pre>
 
-        <h3>3. Create a pull request</h3>
+        <h4>3. Create a pull request</h4>
         <pre><code>gflow pr "Add user authentication"</code></pre>
         <p>This will:</p>
         <ul>
@@ -116,11 +130,11 @@ git commit -m "feat: add user login endpoint"</code></pre>
           <li>Show you the PR URL</li>
         </ul>
 
-        <h3>4. Check your status</h3>
+        <h4>4. Check your status</h4>
         <pre><code>gflow dash</code></pre>
         <p>See your branch status, PR details, and CI check results in real-time.</p>
 
-        <h3>5. Merge and clean up</h3>
+        <h4>5. Merge and clean up</h4>
         <p>Once CI passes and you have approvals:</p>
         <pre><code>gflow finish</code></pre>
         <p>This will:</p>
