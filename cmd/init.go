@@ -48,34 +48,19 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	cfg := config.DefaultConfig()
 
-	// Step 1: Detect provider
-	ui.Step(1, "Git Provider")
+	// Step 1: Detect GitHub repo
+	ui.Step(1, "GitHub Repository")
 	remoteURL, err := g.RemoteURL()
-	detectedProvider := "github"
 	detectedOwner := ""
 	detectedRepo := ""
 
 	if err == nil {
-		detectedProvider = git.DetectProvider(remoteURL)
 		detectedOwner, detectedRepo, _ = git.ParseRemoteURL(remoteURL)
-		ui.Detail("Detected", fmt.Sprintf("%s (%s/%s)", detectedProvider, detectedOwner, detectedRepo))
+		ui.Detail("Detected", fmt.Sprintf("github.com/%s/%s", detectedOwner, detectedRepo))
 	}
 
-	_, provider, err := ui.PromptSelect("Provider", []string{"github", "gitlab", "bitbucket"})
-	if err != nil {
-		return err
-	}
-	cfg.Provider.Name = provider
-
-	// Set token env based on provider
-	switch provider {
-	case "github":
-		cfg.Provider.TokenEnv = "GITHUB_TOKEN"
-	case "gitlab":
-		cfg.Provider.TokenEnv = "GITLAB_TOKEN"
-	case "bitbucket":
-		cfg.Provider.TokenEnv = "BITBUCKET_TOKEN"
-	}
+	cfg.Provider.Name = "github"
+	cfg.Provider.TokenEnv = "GITHUB_TOKEN"
 
 	// Owner and repo
 	owner, err := ui.PromptInput("Repository owner/org", detectedOwner)
@@ -89,6 +74,31 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	cfg.Provider.Repo = repo
+
+	// Check for GitHub token
+	token := os.Getenv("GITHUB_TOKEN")
+	if token == "" {
+		token = os.Getenv("GH_TOKEN")
+	}
+	if token != "" {
+		ui.StepDone("GitHub token found")
+	} else {
+		ui.Warn("No GitHub token found")
+		fmt.Println()
+		fmt.Println(ui.BoldStyle.Render("  To generate a GitHub token:"))
+		fmt.Println()
+		fmt.Println("  1. Go to https://github.com/settings/tokens")
+		fmt.Println("  2. Click \"Generate new token\" → \"Generate new token (classic)\"")
+		fmt.Println("  3. Give it a name (e.g. \"gflow\")")
+		fmt.Println("  4. Select scopes: " + ui.BoldStyle.Render("repo") + " (full control of private repos)")
+		fmt.Println("  5. Click \"Generate token\" and copy it")
+		fmt.Println()
+		fmt.Println("  Then set it in your shell:")
+		fmt.Println(ui.BoldStyle.Render("    export GITHUB_TOKEN=ghp_xxxxxxxxxxxx"))
+		fmt.Println()
+		fmt.Println(ui.MutedStyle.Render("  Add the export to ~/.zshrc or ~/.bashrc to make it permanent."))
+		fmt.Println()
+	}
 
 	fmt.Println()
 
@@ -262,9 +272,16 @@ func runInit(cmd *cobra.Command, args []string) error {
 	})
 
 	ui.Info("Next steps:")
-	fmt.Printf("    %s Set your token: export %s=<your-token>\n", ui.IconArrow, cfg.Provider.TokenEnv)
+	nextToken := os.Getenv("GITHUB_TOKEN")
+	if nextToken == "" {
+		nextToken = os.Getenv("GH_TOKEN")
+	}
+	if nextToken == "" {
+		fmt.Printf("    %s Set your token: export GITHUB_TOKEN=ghp_xxxxxxxxxxxx\n", ui.IconArrow)
+	}
 	fmt.Printf("    %s Start a feature: gflow start feature my-feature\n", ui.IconArrow)
 	fmt.Printf("    %s Create a PR:     gflow pr\n", ui.IconArrow)
+	fmt.Printf("    %s View dashboard:  gflow dash\n", ui.IconArrow)
 	fmt.Println()
 
 	return nil

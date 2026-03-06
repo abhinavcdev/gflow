@@ -113,18 +113,37 @@ This launches an interactive wizard that creates a `.gflow.yml` config file:
   ✓ Created .gflow.yml
 ```
 
-### 2. Set your token
+### 2. Set up your GitHub token
+
+gflow needs a GitHub Personal Access Token to create PRs, manage releases, etc.
+
+**Generate a token:**
+
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token"** → **"Generate new token (classic)"**
+3. Name it `gflow`
+4. Select the **`repo`** scope (full control of private repositories)
+5. Click **"Generate token"** and copy it
+
+**Set it in your shell:**
 
 ```bash
-# GitHub
 export GITHUB_TOKEN=ghp_xxxxxxxxxxxx
-
-# GitLab
-export GITLAB_TOKEN=glpat-xxxxxxxxxxxx
-
-# Bitbucket
-export BITBUCKET_TOKEN=xxxxxxxxxxxx
 ```
+
+**Make it permanent** (add to your shell profile):
+
+```bash
+# zsh (default on macOS)
+echo 'export GITHUB_TOKEN=ghp_xxxxxxxxxxxx' >> ~/.zshrc
+source ~/.zshrc
+
+# bash
+echo 'export GITHUB_TOKEN=ghp_xxxxxxxxxxxx' >> ~/.bashrc
+source ~/.bashrc
+```
+
+> **Security:** Never commit your token to git. gflow reads it from the `GITHUB_TOKEN` environment variable — the token is never stored in `.gflow.yml`.
 
 ### 3. Start working
 
@@ -133,6 +152,7 @@ gflow start feature user-auth    # Create branch feature/user-auth
 # ... make changes ...
 gflow pr                          # Stage, commit, push, open PR
 gflow finish                      # Merge PR, delete branch, cleanup
+gflow dash                        # See your whole project at a glance
 ```
 
 ## Commands
@@ -337,6 +357,52 @@ View detailed info about a pull request.
 gflow pr view            # View PR for current branch
 gflow pr view 42         # View PR #42
 ```
+
+### `gflow dash`
+
+**Real-time workflow dashboard** — your entire project at a glance. Uses Go's goroutines to fetch everything in parallel. Aliases: `dashboard`, `d`.
+
+```bash
+gflow dash
+gflow d
+```
+
+```
+         __ _
+   __ _ / _| | _____      __
+  / _` | |_| |/ _ \ \ /\ / /
+ | (_| |  _| | (_) \ V  V /
+  \__, |_| |_|\___/ \_/\_/
+  |___/
+  opinionated git workflow CLI
+  fetched in 312ms using 5 parallel goroutines
+
+  ─── BRANCH ──────────────────────────────────────
+  ✨ feature/user-auth  (feature)
+    base: main
+    sync: ↑3 ahead  ✓ in sync
+
+  ─── WORKING TREE ────────────────────────────────
+  ●  2 staged  1 modified
+
+  ─── PULL REQUEST ────────────────────────────────
+  ●  #42 Add user authentication  Open
+       https://github.com/you/repo/pull/42
+
+  ─── OPEN PRs (2) ───────────────────────────────
+  ●  #42  Add user authentication ←
+  ◌  #38  Draft: refactor login flow
+
+  ─── RECENT COMMITS ─────────────────────────────
+  ✨ a1b2c3d feat: add auth middleware      2 min ago
+  🐛 d4e5f6g fix: token validation          1 hour ago
+
+  ─── QUICK ACTIONS ──────────────────────────────
+  gflow commit                         conventional commit your changes
+  gflow pr view                        view your open PR
+```
+
+Shows: branch state, sync status, working tree, current PR, all open PRs, recent commits with type icons, contextual quick actions — **all fetched in parallel**.
 
 ### `gflow version`
 
